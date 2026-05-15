@@ -19,7 +19,7 @@ const sendContactNotification = async ({ name, email, phone, message }) => {
   })
 }
 
-const sendInstantBookingEmail = async ({ service, date, name, email, phone }) => {
+const sendInstantBookingEmail = async ({ service, date, name, email, phone, message }) => {
   const dateStr = new Date(date).toDateString()
 
   await transporter.sendMail({
@@ -32,7 +32,8 @@ const sendInstantBookingEmail = async ({ service, date, name, email, phone }) =>
       <p><strong>Date:</strong> ${dateStr}</p>
       ${name  ? `<p><strong>Name:</strong> ${name}</p>`   : ''}
       ${email ? `<p><strong>Email:</strong> ${email}</p>` : ''}
-      ${phone ? `<p><strong>Phone:</strong> ${phone}</p>` : ''}
+      ${phone   ? `<p><strong>Phone:</strong> ${phone}</p>`                         : ''}
+      ${message ? `<p><strong>Message:</strong></p><blockquote>${message}</blockquote>` : ''}
     `,
   })
 }
