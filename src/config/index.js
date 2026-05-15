@@ -15,6 +15,6 @@ module.exports = {
   SMTP_PORT: parseInt(process.env.SMTP_PORT || '587', 10),
   SMTP_USER: process.env.SMTP_USER,
   SMTP_PASS: process.env.SMTP_PASS,
-  ADMIN_EMAIL: process.env.ADMIN_EMAIL || 'info@companyname.com',
+  ADMIN_EMAIL: process.env.ADMIN_EMAIL || process.env.SMTP_USER,
   CLIENT_URL: process.env.CLIENT_URL || 'http://localhost:3000',
 }
