@@ -6,7 +6,8 @@ const teamSchema = z.object({
   description: z.string().optional(),
   experience: z.string().optional(),
   rating: z.number().min(1).max(5).optional(),
-  image: z.string().url().optional(),
+  image:     z.string().url().optional(),
+  instagram: z.string().optional(),
   sortOrder: z.number().int().optional(),
   isActive: z.boolean().optional(),
 })

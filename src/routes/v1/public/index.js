@@ -1,5 +1,6 @@
 const { Router } = require('express')
 const { listStudios, getStudio, listServiceTitles } = require('../../../controllers/studio.controller')
+const { getSettings } = require('../../../controllers/siteSettings.controller')
 const { submitInstantBooking } = require('../../../controllers/instantBooking.controller')
 const { instantBookingSchema } = require('../../../validators/instantBooking.validator')
 const { listTeam } = require('../../../controllers/team.controller')
@@ -20,6 +21,7 @@ router.get('/team', listTeam)
 router.get('/testimonials', listTestimonials)
 router.get('/pricing', listPricing)
 router.post('/contact', validate(contactSchema), submitContact)
+router.get('/settings', getSettings)
 router.post('/track', trackPageView)
 
 module.exports = router

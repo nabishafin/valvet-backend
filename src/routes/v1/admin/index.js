@@ -11,6 +11,7 @@ const { listMessages, updateStatus: updateContactStatus, deleteMessage } = requi
 const { listInstantBookings, updateInstantBookingStatus, deleteInstantBooking } = require('../../../controllers/instantBooking.controller')
 const { uploadImage } = require('../../../controllers/upload.controller')
 const { getDashboardStats } = require('../../../controllers/stats.controller')
+const { getSettings, updateSettings } = require('../../../controllers/siteSettings.controller')
 
 const { studioSchema, updateStudioSchema } = require('../../../validators/studio.validator')
 const { teamSchema, updateTeamSchema } = require('../../../validators/team.validator')
@@ -23,6 +24,10 @@ router.use(verifyJWT)
 
 // Stats
 router.get('/stats', getDashboardStats)
+
+// Site Settings
+router.get('/settings', getSettings)
+router.put('/settings', updateSettings)
 
 // Studios
 router.get('/studios', adminListStudios)
