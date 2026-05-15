@@ -29,4 +29,21 @@ const me = asyncHandler(async (req, res) => {
   res.status(200).json(new ApiResponse(200, req.user, 'User fetched successfully'))
 })
 
-module.exports = { register, login, logout, refreshToken, me }
+const forgotPassword = asyncHandler(async (req, res) => {
+  await authService.forgotPassword(req.body.email)
+  res.json(new ApiResponse(200, {}, 'OTP sent to your email'))
+})
+
+const verifyOtp = asyncHandler(async (req, res) => {
+  const { email, otp } = req.body
+  const data = await authService.verifyOtp(email, otp)
+  res.json(new ApiResponse(200, data, 'OTP verified'))
+})
+
+const resetPassword = asyncHandler(async (req, res) => {
+  const { resetToken, newPassword } = req.body
+  await authService.resetPassword(resetToken, newPassword)
+  res.json(new ApiResponse(200, {}, 'Password reset successfully'))
+})
+
+module.exports = { register, login, logout, refreshToken, me, forgotPassword, verifyOtp, resetPassword }

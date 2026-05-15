@@ -25,6 +25,12 @@ const userSchema = new mongoose.Schema(
     refreshToken: {
       type: String,
     },
+    resetOtp: {
+      type: String,
+    },
+    resetOtpExpiry: {
+      type: Date,
+    },
   },
   { timestamps: true }
 )

@@ -38,4 +38,20 @@ const sendInstantBookingEmail = async ({ service, date, name, email, phone, mess
   })
 }
 
-module.exports = { sendContactNotification, sendInstantBookingEmail }
+const sendOtpEmail = async ({ email, otp }) => {
+  await transporter.sendMail({
+    from,
+    to: email,
+    subject: 'Password Reset OTP — Velvet Rouge',
+    html: `
+      <h2>Password Reset Request</h2>
+      <p>Your OTP code is:</p>
+      <h1 style="letter-spacing:8px;">${otp}</h1>
+      <p>This code expires in <strong>10 minutes</strong>.</p>
+      <p>If you didn't request this, ignore this email.</p>
+      <br/><p>— The Velvet Rouge Team</p>
+    `,
+  })
+}
+
+module.exports = { sendContactNotification, sendInstantBookingEmail, sendOtpEmail }

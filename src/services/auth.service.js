@@ -58,4 +58,47 @@ const refreshAccessToken = async (token) => {
   return { accessToken, refreshToken: newRefreshToken }
 }
 
-module.exports = { register, login, logout, refreshAccessToken }
+const forgotPassword = async (email) => {
+  const user = await User.findOne({ email })
+  if (!user) throw new ApiError(404, 'No account found with this email')
+
+  const otp = Math.floor(100000 + Math.random() * 900000).toString()
+  user.resetOtp       = otp
+  user.resetOtpExpiry = new Date(Date.now() + 10 * 60 * 1000) // 10 min
+  await user.save({ validateBeforeSave: false })
+
+  const { sendOtpEmail } = require('./email.service')
+  await sendOtpEmail({ email, otp })
+}
+
+const verifyOtp = async (email, otp) => {
+  const user = await User.findOne({ email })
+  if (!user || !user.resetOtp) throw new ApiError(400, 'Invalid request')
+  if (user.resetOtp !== otp)   throw new ApiError(400, 'Invalid OTP')
+  if (user.resetOtpExpiry < new Date()) throw new ApiError(400, 'OTP has expired')
+
+  const resetToken = jwt.sign({ _id: user._id }, JWT_REFRESH_SECRET, { expiresIn: '15m' })
+
+  user.resetOtp       = undefined
+  user.resetOtpExpiry = undefined
+  await user.save({ validateBeforeSave: false })
+
+  return { resetToken }
+}
+
+const resetPassword = async (resetToken, newPassword) => {
+  let decoded
+  try {
+    decoded = jwt.verify(resetToken, JWT_REFRESH_SECRET)
+  } catch {
+    throw new ApiError(400, 'Invalid or expired reset token')
+  }
+
+  const user = await User.findById(decoded._id)
+  if (!user) throw new ApiError(404, 'User not found')
+
+  user.password = newPassword
+  await user.save()
+}
+
+module.exports = { register, login, logout, refreshAccessToken, forgotPassword, verifyOtp, resetPassword }
