@@ -3,6 +3,7 @@ const ApiResponse = require('../utils/ApiResponse')
 const Studio = require('../models/studio.model')
 const Team = require('../models/team.model')
 const Contact = require('../models/contact.model')
+const InstantBooking = require('../models/instantBooking.model')
 const PageView = require('../models/pageview.model')
 
 const calcTrend = (current, previous) => {
@@ -23,6 +24,8 @@ const getDashboardStats = asyncHandler(async (req, res) => {
     totalTeam,
     totalInquiries,
     newInquiriesThisWeek,
+    totalInstantBookings,
+    newInstantBookingsThisWeek,
     totalHits,
     liveSessionIds,
     // current 30 days
@@ -38,6 +41,8 @@ const getDashboardStats = asyncHandler(async (req, res) => {
     Team.countDocuments({ isActive: true }),
     Contact.countDocuments(),
     Contact.countDocuments({ createdAt: { $gte: weekAgo } }),
+    InstantBooking.countDocuments(),
+    InstantBooking.countDocuments({ createdAt: { $gte: weekAgo } }),
     PageView.countDocuments(),
     PageView.distinct('sessionId', { createdAt: { $gte: fiveMinAgo } }),
 
@@ -85,6 +90,8 @@ const getDashboardStats = asyncHandler(async (req, res) => {
       totalTeam,
       totalInquiries,
       newInquiriesThisWeek,
+      totalInstantBookings,
+      newInstantBookingsThisWeek,
       totalHits,
       liveVisitors: liveSessionIds.length,
       avgSession,

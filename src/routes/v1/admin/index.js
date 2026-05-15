@@ -8,6 +8,7 @@ const { adminListTeam, createMember, updateMember, deleteMember } = require('../
 const { adminListTestimonials, createTestimonial, updateTestimonial, deleteTestimonial } = require('../../../controllers/testimonial.controller')
 const { adminListPricing, createPlan, updatePlan, deletePlan } = require('../../../controllers/pricing.controller')
 const { listMessages, updateStatus: updateContactStatus, deleteMessage } = require('../../../controllers/contact.controller')
+const { listInstantBookings, updateInstantBookingStatus, deleteInstantBooking } = require('../../../controllers/instantBooking.controller')
 const { uploadImage } = require('../../../controllers/upload.controller')
 const { getDashboardStats } = require('../../../controllers/stats.controller')
 
@@ -46,6 +47,11 @@ router.get('/pricing', adminListPricing)
 router.post('/pricing', validate(pricingSchema), createPlan)
 router.put('/pricing/:id', validate(updatePricingSchema), updatePlan)
 router.delete('/pricing/:id', deletePlan)
+
+// Instant Bookings
+router.get('/instant-bookings', listInstantBookings)
+router.put('/instant-bookings/:id/status', updateInstantBookingStatus)
+router.delete('/instant-bookings/:id', deleteInstantBooking)
 
 // Contact Messages
 router.get('/contact', listMessages)
