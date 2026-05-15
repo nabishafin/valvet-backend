@@ -2,12 +2,25 @@ const asyncHandler = require('../utils/asyncHandler')
 const ApiResponse = require('../utils/ApiResponse')
 const ApiError = require('../utils/ApiError')
 const InstantBooking = require('../models/instantBooking.model')
+const Team = require('../models/team.model')
 const { sendInstantBookingEmail } = require('../services/email.service')
 
 const submitInstantBooking = asyncHandler(async (req, res) => {
-  const { service, date, name, email, phone, message } = req.body
-  const booking = await InstantBooking.create({ service, date: new Date(date), name, email, phone, message })
-  sendInstantBookingEmail({ service, date, name, email, phone, message }).catch(console.error)
+  const { service, teamMemberId, date, name, email, phone, message } = req.body
+  const bookingData = { date: new Date(date), name, email, phone, message }
+
+  if (teamMemberId) {
+    const member = await Team.findById(teamMemberId)
+    if (!member) throw new ApiError(404, 'Team member not found')
+    bookingData.teamMemberId   = member._id
+    bookingData.teamMemberName = member.name
+    bookingData.service        = member.name
+  } else {
+    bookingData.service = service
+  }
+
+  const booking = await InstantBooking.create(bookingData)
+  sendInstantBookingEmail({ service: bookingData.service, date, name, email, phone, message }).catch(console.error)
   res.status(201).json(new ApiResponse(201, booking, 'Booking request sent successfully'))
 })
 
@@ -18,8 +31,9 @@ const listInstantBookings = asyncHandler(async (req, res) => {
 
   if (search.trim()) {
     filter.$or = [
-      { name:    { $regex: search.trim(), $options: 'i' } },
-      { service: { $regex: search.trim(), $options: 'i' } },
+      { name:           { $regex: search.trim(), $options: 'i' } },
+      { service:        { $regex: search.trim(), $options: 'i' } },
+      { teamMemberName: { $regex: search.trim(), $options: 'i' } },
     ]
   }
   if (status && status !== 'all') filter.status = status
@@ -29,7 +43,7 @@ const listInstantBookings = asyncHandler(async (req, res) => {
   const skip     = (pageNum - 1) * limitNum
 
   const [bookings, total] = await Promise.all([
-    InstantBooking.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limitNum),
+    InstantBooking.find(filter).populate('teamMemberId', 'name role image').sort({ createdAt: -1 }).skip(skip).limit(limitNum),
     InstantBooking.countDocuments(filter),
   ])
 

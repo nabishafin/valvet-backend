@@ -50,7 +50,7 @@ const update = async (id, data) => {
 }
 
 const softDelete = async (id) => {
-  const member = await Team.findByIdAndUpdate(id, { isActive: false }, { new: true })
+  const member = await Team.findByIdAndDelete(id)
   if (!member) throw new ApiError(404, 'Team member not found')
   return member
 }
