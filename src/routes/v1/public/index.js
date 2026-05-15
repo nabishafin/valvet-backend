@@ -1,0 +1,25 @@
+const { Router } = require('express')
+const { listStudios, getStudio, listServiceTitles } = require('../../../controllers/studio.controller')
+const { submitInstantBooking } = require('../../../controllers/instantBooking.controller')
+const { instantBookingSchema } = require('../../../validators/instantBooking.validator')
+const { listTeam } = require('../../../controllers/team.controller')
+const { listTestimonials } = require('../../../controllers/testimonial.controller')
+const { listPricing } = require('../../../controllers/pricing.controller')
+const { submitContact } = require('../../../controllers/contact.controller')
+const { trackPageView } = require('../../../controllers/track.controller')
+const { validate } = require('../../../middlewares/validate.middleware')
+const { contactSchema } = require('../../../validators/contact.validator')
+
+const router = Router()
+
+router.get('/services', listServiceTitles)
+router.get('/studios', listStudios)
+router.get('/studios/:slug', getStudio)
+router.post('/instant-booking', validate(instantBookingSchema), submitInstantBooking)
+router.get('/team', listTeam)
+router.get('/testimonials', listTestimonials)
+router.get('/pricing', listPricing)
+router.post('/contact', validate(contactSchema), submitContact)
+router.post('/track', trackPageView)
+
+module.exports = router
