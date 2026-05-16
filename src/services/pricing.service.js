@@ -3,7 +3,7 @@ const ApiError = require('../utils/ApiError')
 
 const getAll = (adminMode = false) => {
   const filter = adminMode ? {} : { isActive: true }
-  return Pricing.find(filter).sort({ sortOrder: 1 })
+  return Pricing.find(filter).sort({ order: 1 })
 }
 
 const create = (data) => Pricing.create(data)

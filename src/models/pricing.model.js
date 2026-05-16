@@ -7,13 +7,14 @@ const featureSchema = new mongoose.Schema(
 
 const pricingSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true, trim: true },
-    price: { type: Number, required: true },
-    period: { type: String, default: 'Every Month' },
-    features: { type: [featureSchema], default: [] },
-    isHighlighted: { type: Boolean, default: false },
-    sortOrder: { type: Number, default: 0 },
-    isActive: { type: Boolean, default: true },
+    name:        { type: String, required: true, trim: true },
+    price:       { type: Number, required: true },
+    period:      { type: String, default: 'Every Month' },
+    buttonText:  { type: String, default: 'Join Experience' },
+    features:    { type: [featureSchema], default: [] },
+    highlighted: { type: Boolean, default: false },
+    order:       { type: Number, default: 0 },
+    isActive:    { type: Boolean, default: true },
   },
   { timestamps: true }
 )

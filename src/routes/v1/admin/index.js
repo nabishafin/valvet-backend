@@ -7,6 +7,7 @@ const { adminListStudios, createStudio, updateStudio, deleteStudio } = require('
 const { adminListTeam, createMember, updateMember, deleteMember } = require('../../../controllers/team.controller')
 const { adminListTestimonials, createTestimonial, updateTestimonial, deleteTestimonial } = require('../../../controllers/testimonial.controller')
 const { adminListPricing, createPlan, updatePlan, deletePlan } = require('../../../controllers/pricing.controller')
+const { listFeatures, createFeature, deleteFeature } = require('../../../controllers/pricingFeature.controller')
 const { listMessages, updateStatus: updateContactStatus, deleteMessage } = require('../../../controllers/contact.controller')
 const { listInstantBookings, updateInstantBookingStatus, deleteInstantBooking } = require('../../../controllers/instantBooking.controller')
 const { uploadImage } = require('../../../controllers/upload.controller')
@@ -47,10 +48,16 @@ router.post('/testimonials', validate(testimonialSchema), createTestimonial)
 router.put('/testimonials/:id', validate(updateTestimonialSchema), updateTestimonial)
 router.delete('/testimonials/:id', deleteTestimonial)
 
+// Pricing Features (master list)
+router.get('/pricing-features', listFeatures)
+router.post('/pricing-features', createFeature)
+router.delete('/pricing-features/:id', deleteFeature)
+
 // Pricing
 router.get('/pricing', adminListPricing)
 router.post('/pricing', validate(pricingSchema), createPlan)
 router.put('/pricing/:id', validate(updatePricingSchema), updatePlan)
+router.patch('/pricing/:id', validate(updatePricingSchema), updatePlan)
 router.delete('/pricing/:id', deletePlan)
 
 // Instant Bookings
