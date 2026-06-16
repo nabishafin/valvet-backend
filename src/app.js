@@ -11,6 +11,10 @@ const app = express()
 const allowedOrigins = [
   'http://2.25.159.170:3000',
   'http://2.25.159.170:3002',
+  'http://localhost:3000',
+  'http://localhost:3001',
+  'http://localhost:3002',
+  'http://localhost:8000',
 ]
 
 app.use(helmet())

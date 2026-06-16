@@ -6,8 +6,8 @@ const Team = require('../models/team.model')
 const { sendInstantBookingEmail } = require('../services/email.service')
 
 const submitInstantBooking = asyncHandler(async (req, res) => {
-  const { service, teamMemberId, date, name, email, phone, message } = req.body
-  const bookingData = { date: new Date(date), name, email, phone, message }
+  const { service, teamMemberId, date, time, name, email, phone, message } = req.body
+  const bookingData = { date: new Date(date), time, name, email, phone, message }
 
   if (teamMemberId) {
     const member = await Team.findById(teamMemberId)
@@ -16,11 +16,18 @@ const submitInstantBooking = asyncHandler(async (req, res) => {
     bookingData.teamMemberName = member.name
     bookingData.service        = member.name
   } else {
-    bookingData.service = service
+    bookingData.service = service || 'General Appointment'
   }
 
   const booking = await InstantBooking.create(bookingData)
-  sendInstantBookingEmail({ service: bookingData.service, date, name, email, phone, message }).catch(console.error)
+
+  const emailPayload = { service: bookingData.service, date, time, name, email, phone, message }
+  sendInstantBookingEmail(emailPayload).catch(console.error)
+  if (email) {
+    const { sendBookingConfirmationToClient } = require('../services/email.service')
+    sendBookingConfirmationToClient(emailPayload).catch(console.error)
+  }
+
   res.status(201).json(new ApiResponse(201, booking, 'Booking request sent successfully'))
 })
 

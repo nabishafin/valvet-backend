@@ -3,7 +3,7 @@ const ApiError = require('../utils/ApiError')
 
 // Public — only active members, no pagination
 const getPublic = () =>
-  Team.find({ isActive: true }).sort({ sortOrder: 1, createdAt: 1 })
+  Team.find({ isActive: true }).sort({ sortOrder: 1, createdAt: -1 })
 
 // Admin — ALL members (no isActive filter), with search + pagination
 const getAdmin = async ({ search = '', page = 1, limit = 10 } = {}) => {

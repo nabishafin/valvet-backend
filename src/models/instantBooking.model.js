@@ -2,10 +2,11 @@ const mongoose = require('mongoose')
 
 const instantBookingSchema = new mongoose.Schema(
   {
-    service:        { type: String, required: true, trim: true },
+    service:        { type: String, trim: true },
     teamMemberId:   { type: mongoose.Schema.Types.ObjectId, ref: 'Team' },
     teamMemberName: { type: String, trim: true },
     date:           { type: Date, required: true },
+    time:           { type: String, trim: true },
     name:           { type: String, trim: true },
     email:          { type: String, lowercase: true, trim: true },
     phone:          { type: String, trim: true },

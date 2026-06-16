@@ -8,10 +8,15 @@ const { listTestimonials } = require('../../../controllers/testimonial.controlle
 const { listPricing } = require('../../../controllers/pricing.controller')
 const { submitContact } = require('../../../controllers/contact.controller')
 const { trackPageView } = require('../../../controllers/track.controller')
+const { listBlogs, getBlog } = require('../../../controllers/blog.controller')
+const { subscribe } = require('../../../controllers/subscriber.controller')
 const { validate } = require('../../../middlewares/validate.middleware')
 const { contactSchema } = require('../../../validators/contact.validator')
 
 const router = Router()
+
+router.get('/blogs', listBlogs)
+router.get('/blogs/:slug', getBlog)
 
 router.get('/services', listServiceTitles)
 router.get('/studios', listStudios)
@@ -23,5 +28,6 @@ router.get('/pricing', listPricing)
 router.post('/contact', validate(contactSchema), submitContact)
 router.get('/settings', getSettings)
 router.post('/track', trackPageView)
+router.post('/subscribe', subscribe)
 
 module.exports = router

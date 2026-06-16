@@ -19,21 +19,46 @@ const sendContactNotification = async ({ name, email, phone, message }) => {
   })
 }
 
-const sendInstantBookingEmail = async ({ service, date, name, email, phone, message }) => {
+const sendInstantBookingEmail = async ({ service, date, time, name, email, phone, message }) => {
   const dateStr = new Date(date).toDateString()
 
   await transporter.sendMail({
     from,
     to: ADMIN_EMAIL,
-    subject: `Instant Booking Request — ${service}`,
+    subject: `New Appointment Request — ${name || 'Guest'}`,
     html: `
-      <h2>New Instant Booking Request</h2>
-      <p><strong>Service:</strong> ${service}</p>
+      <h2>New Appointment Request</h2>
+      ${service ? `<p><strong>Service:</strong> ${service}</p>` : ''}
       <p><strong>Date:</strong> ${dateStr}</p>
-      ${name  ? `<p><strong>Name:</strong> ${name}</p>`   : ''}
-      ${email ? `<p><strong>Email:</strong> ${email}</p>` : ''}
-      ${phone   ? `<p><strong>Phone:</strong> ${phone}</p>`                         : ''}
+      ${time    ? `<p><strong>Time:</strong> ${time}</p>`                              : ''}
+      ${name    ? `<p><strong>Name:</strong> ${name}</p>`                              : ''}
+      ${email   ? `<p><strong>Email:</strong> ${email}</p>`                            : ''}
+      ${phone   ? `<p><strong>Phone:</strong> ${phone}</p>`                            : ''}
       ${message ? `<p><strong>Message:</strong></p><blockquote>${message}</blockquote>` : ''}
+    `,
+  })
+}
+
+const sendBookingConfirmationToClient = async ({ service, date, time, name, email, phone, message }) => {
+  const dateStr = new Date(date).toDateString()
+
+  await transporter.sendMail({
+    from,
+    to: email,
+    subject: 'Your Appointment Request — Velvet Rouge Salon Suites',
+    html: `
+      <h2>Thank you, ${name || 'valued client'}!</h2>
+      <p>We have received your appointment request at <strong>Velvet Rouge Salon Suites</strong>. We will confirm your booking shortly.</p>
+      <hr/>
+      <h3>Appointment Details</h3>
+      ${service ? `<p><strong>Service:</strong> ${service}</p>` : ''}
+      <p><strong>Requested Date:</strong> ${dateStr}</p>
+      ${time    ? `<p><strong>Requested Time:</strong> ${time}</p>` : ''}
+      ${phone   ? `<p><strong>Phone:</strong> ${phone}</p>`         : ''}
+      ${message ? `<p><strong>Your Message:</strong></p><blockquote>${message}</blockquote>` : ''}
+      <hr/>
+      <p>If you have any questions, feel free to reply to this email or contact us directly.</p>
+      <p>— The Velvet Rouge Team</p>
     `,
   })
 }
@@ -54,4 +79,19 @@ const sendOtpEmail = async ({ email, otp }) => {
   })
 }
 
-module.exports = { sendContactNotification, sendInstantBookingEmail, sendOtpEmail }
+const sendWelcomeEmail = async ({ email }) => {
+  await transporter.sendMail({
+    from,
+    to: email,
+    subject: 'Welcome to Velvet Rouge Salon Suites!',
+    html: `
+      <h2>Welcome to the Velvet Rouge Family!</h2>
+      <p>Thank you for subscribing to <strong>Maison Letters</strong>.</p>
+      <p>You will now receive exclusive invitations and beauty insights straight to your inbox.</p>
+      <br/>
+      <p>— The Velvet Rouge Team</p>
+    `,
+  })
+}
+
+module.exports = { sendContactNotification, sendInstantBookingEmail, sendBookingConfirmationToClient, sendOtpEmail, sendWelcomeEmail }

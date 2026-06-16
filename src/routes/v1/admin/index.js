@@ -13,11 +13,14 @@ const { listInstantBookings, updateInstantBookingStatus, deleteInstantBooking } 
 const { uploadImage } = require('../../../controllers/upload.controller')
 const { getDashboardStats } = require('../../../controllers/stats.controller')
 const { getSettings, updateSettings } = require('../../../controllers/siteSettings.controller')
+const { adminListBlogs, adminGetBlog, createBlog, updateBlog, deleteBlog } = require('../../../controllers/blog.controller')
+const { listSubscribers, deleteSubscriber, updateSubscriberStatus } = require('../../../controllers/subscriber.controller')
 
 const { studioSchema, updateStudioSchema } = require('../../../validators/studio.validator')
 const { teamSchema, updateTeamSchema } = require('../../../validators/team.validator')
 const { testimonialSchema, updateTestimonialSchema } = require('../../../validators/testimonial.validator')
 const { pricingSchema, updatePricingSchema } = require('../../../validators/pricing.validator')
+const { blogSchema, updateBlogSchema } = require('../../../validators/blog.validator')
 
 const router = Router()
 
@@ -69,6 +72,18 @@ router.delete('/instant-bookings/:id', deleteInstantBooking)
 router.get('/contact', listMessages)
 router.put('/contact/:id/status', updateContactStatus)
 router.delete('/contact/:id', deleteMessage)
+
+// Blog
+router.get('/blogs', adminListBlogs)
+router.get('/blogs/:id', adminGetBlog)
+router.post('/blogs', validate(blogSchema), createBlog)
+router.put('/blogs/:id', validate(updateBlogSchema), updateBlog)
+router.delete('/blogs/:id', deleteBlog)
+
+// Subscribers
+router.get('/subscribers', listSubscribers)
+router.put('/subscribers/:id/status', updateSubscriberStatus)
+router.delete('/subscribers/:id', deleteSubscriber)
 
 // File Upload
 router.post('/upload', upload.single('image'), uploadImage)
