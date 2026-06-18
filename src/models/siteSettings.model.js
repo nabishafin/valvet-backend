@@ -7,9 +7,12 @@ const siteSettingsSchema = new mongoose.Schema(
     logo:    { type: String, trim: true },
 
     founder: {
-      name:  { type: String, trim: true },
-      role:  { type: String, trim: true },
-      image: { type: String, trim: true },
+      name:            { type: String, trim: true },
+      role:            { type: String, trim: true },
+      image:           { type: String, trim: true },
+      backgroundImage: { type: String, trim: true },
+      bio:             { type: [String], default: [] },
+      quote:           { type: String, trim: true },
     },
 
     contact: {
