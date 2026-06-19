@@ -3,7 +3,7 @@ const ApiResponse = require('../utils/ApiResponse')
 const ApiError = require('../utils/ApiError')
 const InstantBooking = require('../models/instantBooking.model')
 const Team = require('../models/team.model')
-const { sendInstantBookingEmail } = require('../services/email.service')
+const { sendInstantBookingEmail, sendAppointmentConfirmedEmail } = require('../services/email.service')
 
 const submitInstantBooking = asyncHandler(async (req, res) => {
   const { service, teamMemberId, date, time, name, email, phone, message } = req.body
@@ -74,6 +74,17 @@ const updateInstantBookingStatus = asyncHandler(async (req, res) => {
     { new: true, runValidators: true }
   )
   if (!item) throw new ApiError(404, 'Booking not found')
+
+  if (req.body.status === 'resolved' && item.email) {
+    sendAppointmentConfirmedEmail({
+      name:    item.name,
+      email:   item.email,
+      service: item.service,
+      date:    item.date,
+      time:    item.time,
+    }).catch(console.error)
+  }
+
   res.json(new ApiResponse(200, item, 'Status updated'))
 })
 

@@ -79,6 +79,29 @@ const sendOtpEmail = async ({ email, otp }) => {
   })
 }
 
+const sendAppointmentConfirmedEmail = async ({ name, email, service, date, time }) => {
+  const dateStr = new Date(date).toDateString()
+
+  await transporter.sendMail({
+    from,
+    to: email,
+    subject: 'Appointment Confirmed — Velvet Rouge Salon Suites',
+    html: `
+      <h2>Your Appointment is Confirmed!</h2>
+      <p>Dear ${name || 'valued client'},</p>
+      <p>We are pleased to confirm your appointment at <strong>Velvet Rouge Salon Suites</strong>.</p>
+      <hr/>
+      <h3>Appointment Details</h3>
+      ${service ? `<p><strong>Service:</strong> ${service}</p>` : ''}
+      <p><strong>Date:</strong> ${dateStr}</p>
+      ${time ? `<p><strong>Time:</strong> ${time}</p>` : ''}
+      <hr/>
+      <p>We look forward to seeing you! If you need to reschedule or have any questions, please contact us.</p>
+      <p>— The Velvet Rouge Team</p>
+    `,
+  })
+}
+
 const sendWelcomeEmail = async ({ email }) => {
   await transporter.sendMail({
     from,
@@ -94,4 +117,4 @@ const sendWelcomeEmail = async ({ email }) => {
   })
 }
 
-module.exports = { sendContactNotification, sendInstantBookingEmail, sendBookingConfirmationToClient, sendOtpEmail, sendWelcomeEmail }
+module.exports = { sendContactNotification, sendInstantBookingEmail, sendBookingConfirmationToClient, sendAppointmentConfirmedEmail, sendOtpEmail, sendWelcomeEmail }
