@@ -79,6 +79,22 @@ const sendOtpEmail = async ({ email, otp }) => {
   })
 }
 
+const sendContactResolvedEmail = async ({ name, email }) => {
+  await transporter.sendMail({
+    from,
+    to: email,
+    subject: 'We have responded to your message — Velvet Rouge Salon Suites',
+    html: `
+      <h2>Hello ${name || 'valued client'},</h2>
+      <p>Thank you for reaching out to <strong>Velvet Rouge Salon Suites</strong>.</p>
+      <p>We have reviewed your message and our team will be in touch with you shortly.</p>
+      <p>If you have any further questions, feel free to reply to this email.</p>
+      <br/>
+      <p>— The Velvet Rouge Team</p>
+    `,
+  })
+}
+
 const sendAppointmentConfirmedEmail = async ({ name, email, service, date, time }) => {
   const dateStr = new Date(date).toDateString()
 
@@ -117,4 +133,4 @@ const sendWelcomeEmail = async ({ email }) => {
   })
 }
 
-module.exports = { sendContactNotification, sendInstantBookingEmail, sendBookingConfirmationToClient, sendAppointmentConfirmedEmail, sendOtpEmail, sendWelcomeEmail }
+module.exports = { sendContactNotification, sendContactResolvedEmail, sendInstantBookingEmail, sendBookingConfirmationToClient, sendAppointmentConfirmedEmail, sendOtpEmail, sendWelcomeEmail }

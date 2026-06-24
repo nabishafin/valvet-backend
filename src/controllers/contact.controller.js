@@ -1,6 +1,7 @@
 const asyncHandler = require('../utils/asyncHandler')
 const ApiResponse = require('../utils/ApiResponse')
 const contactService = require('../services/contact.service')
+const { sendContactResolvedEmail } = require('../services/email.service')
 
 const submitContact = asyncHandler(async (req, res) => {
   const message = await contactService.create(req.body)
@@ -15,6 +16,11 @@ const listMessages = asyncHandler(async (req, res) => {
 
 const updateStatus = asyncHandler(async (req, res) => {
   const message = await contactService.updateStatus(req.params.id, req.body.status)
+
+  if (req.body.status === 'resolved' && message.email) {
+    sendContactResolvedEmail({ name: message.name, email: message.email }).catch(console.error)
+  }
+
   res.json(new ApiResponse(200, message, 'Status updated'))
 })
 
