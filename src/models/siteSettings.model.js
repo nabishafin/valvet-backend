@@ -16,10 +16,15 @@ const siteSettingsSchema = new mongoose.Schema(
     },
 
     contact: {
-      phone:    { type: String, trim: true },
-      email:    { type: String, trim: true },
-      whatsapp: { type: String, trim: true },
-      address:  { type: String, trim: true },
+      phone:          { type: String, trim: true },
+      email:          { type: String, trim: true },
+      whatsapp:       { type: String, trim: true },
+      address:        { type: String, trim: true },
+      googleMap:      { type: String, trim: true },
+      googleMapsLink: { type: String, trim: true },
+      mapLink:        { type: String, trim: true },
+      mapEmbed:       { type: String, trim: true },
+      map:            { type: String, trim: true },
     },
 
     socials: {
@@ -34,6 +39,10 @@ const siteSettingsSchema = new mongoose.Schema(
       saturday: { type: String, trim: true },
       sunday:   { type: String, trim: true },
     },
+
+    googleMap:      { type: String, trim: true },
+    googleMapsLink: { type: String, trim: true },
+    mapLink:        { type: String, trim: true },
   },
   { timestamps: true }
 )
