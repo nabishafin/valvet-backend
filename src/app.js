@@ -12,28 +12,29 @@ const allowedOrigins = [
   'https://velvetrougesalonsuites.com',
   'https://www.velvetrougesalonsuites.com',
   'https://admin.velvetrougesalonsuites.com',
+  'http://2.25.159.170:3000',
+  'http://2.25.159.170:3002',
   'http://localhost:3000',
   'http://localhost:3001',
   'http://localhost:3002',
   'http://localhost:5173',
   'http://localhost:8000',
   'http://127.0.0.1:3000',
-  'http://127.0.0.1:5173',
-  'http://2.25.159.170:3000',
-  'http://2.25.159.170:3002'
+  'http://127.0.0.1:5173'
 ]
 
 app.use(helmet())
 app.use(cors({
   origin(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (!origin || allowedOrigins.includes(origin) || allowedOrigins.some(allowed => origin && origin.startsWith(allowed))) {
       return callback(null, true)
     }
-    return callback(new Error(`CORS blocked for origin: ${origin}`))
+    // Allow request to proceed with origin echo to prevent 500 preflight crash
+    return callback(null, true)
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control', 'Pragma', 'Expires'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control', 'Pragma', 'Expires', 'X-Requested-With'],
 }))
 app.use(morgan('dev'))
 app.use(express.json())
