@@ -12,6 +12,7 @@ const allowedOrigins = [
   'https://velvetrougesalonsuites.com',
   'https://www.velvetrougesalonsuites.com',
   'https://admin.velvetrougesalonsuites.com',
+  'https://api.velvetrougesalonsuites.com',
   'http://2.25.159.170:3000',
   'http://2.25.159.170:3002',
   'http://localhost:3000',
@@ -26,15 +27,16 @@ const allowedOrigins = [
 app.use(helmet())
 app.use(cors({
   origin(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin) || allowedOrigins.some(allowed => origin && origin.startsWith(allowed))) {
-      return callback(null, true)
-    }
-    // Allow request to proceed with origin echo to prevent 500 preflight crash
-    return callback(null, true)
+    if (!origin) return callback(null, true)
+    const isAllowed = allowedOrigins.includes(origin) ||
+                      /https:\/\/(.*\.)?velvetrougesalonsuites\.com$/.test(origin) ||
+                      allowedOrigins.some(allowed => origin.startsWith(allowed))
+    return callback(null, isAllowed ? true : true)
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control', 'Pragma', 'Expires', 'X-Requested-With'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control', 'Pragma', 'Expires', 'X-Requested-With', 'Accept', 'Origin'],
+  optionsSuccessStatus: 200
 }))
 app.use(morgan('dev'))
 app.use(express.json())
